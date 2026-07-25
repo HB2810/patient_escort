@@ -58,57 +58,7 @@ class MemoryStore {
       { id: 23, user_id: 23, name: 'Radiology Escort 1', department: 'Radiology', status: 'AVAILABLE', current_location: 'Radiology Desk' }
     ];
 
-    // Initial trips with Handover state support - Updating IDs to match new escorts
-    this.trips = [
-      {
-        id: 1001,
-        patient_name: 'Rajesh Sharma',
-        patient_uhid: 'STV-2026-891',
-        origin_dept: 'OPD',
-        origin_cabin_id: 14,
-        is_privileged: true,
-        dest_dept: 'Radiology',
-        dest_room: 'MRI Room 1',
-        opd_escort_id: 16,
-        opd_escort_name: 'OPD Escort 1 (OPD)',
-        dept_escort_id: 23,
-        dept_escort_name: 'Radiology Escort 1 (Radiology)',
-        mode: 'WHEELCHAIR',
-        priority: 'HIGH_PRIVILEGED',
-        status: 'HANDOVER_PENDING',
-        requested_at: new Date(Date.now() - 15 * 60000),
-        assigned_at: new Date(Date.now() - 14 * 60000),
-        picked_up_at: new Date(Date.now() - 10 * 60000),
-        arrived_at_dept_at: new Date(Date.now() - 2 * 60000),
-        handover_accepted_at: null,
-        delivered_at: null,
-        notes: 'Privileged Patient - Direct MRI Transfer'
-      },
-      {
-        id: 1002,
-        patient_name: 'Priya Verma',
-        patient_uhid: 'STV-2026-892',
-        origin_dept: 'OPD',
-        origin_cabin_id: 4,
-        is_privileged: false,
-        dest_dept: 'Physiotherapy',
-        dest_room: 'Rehab Gym 2',
-        opd_escort_id: 17,
-        opd_escort_name: 'OPD Escort 2 (OPD)',
-        dept_escort_id: 21,
-        dept_escort_name: 'Physio Escort 1 (Physiotherapy)',
-        mode: 'WALKING',
-        priority: 'NORMAL',
-        status: 'ASSIGNED',
-        requested_at: new Date(Date.now() - 5 * 60000),
-        assigned_at: new Date(Date.now() - 4 * 60000),
-        picked_up_at: null,
-        arrived_at_dept_at: null,
-        handover_accepted_at: null,
-        delivered_at: null,
-        notes: 'Spine Consultant Assessment'
-      }
-    ];
+    this.trips = [];
 
     console.log('⚡ MemoryStore Initialized with Real Users & Handover Protocol');
   }
