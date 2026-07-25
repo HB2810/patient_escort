@@ -55,7 +55,7 @@ const Login = () => {
               <input 
                 type="text" 
                 className="form-control form-control-lg bg-light border" 
-                placeholder="e.g. admin or opd_desk"
+                placeholder="Enter Username"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 required 

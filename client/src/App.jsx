@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Navigate, Link } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { SocketProvider, useSocket } from './contexts/SocketContext';
+import { Toaster } from 'react-hot-toast';
 
 import Login from './pages/Login';
 import AdminDashboard from './pages/AdminDashboard';
@@ -103,25 +104,7 @@ function NavigationBar() {
           {soundEnabled ? '🔊 Sound On' : '🔇 Muted'}
         </button>
 
-        {/* Demo Quick Switcher Header */}
-        <div className="d-flex align-items-center ms-auto gap-2">
-          <small className="text-muted fw-bold me-1">Quick Demo Switch:</small>
-          <button onClick={() => handleQuickSwitch('admin')} className={`btn btn-xs ${user?.role === 'Super Admin' ? 'btn-primary' : 'btn-outline-primary'}`}>
-            👑 Admin
-          </button>
-          <button onClick={() => handleQuickSwitch('opd_desk')} className={`btn btn-xs ${user?.role === 'OPD Front Desk' ? 'btn-primary' : 'btn-outline-primary'}`}>
-            🏥 OPD Desk
-          </button>
-          <button onClick={() => handleQuickSwitch('rad_desk')} className={`btn btn-xs ${user?.role === 'Department Front Desk' ? 'btn-primary' : 'btn-outline-primary'}`}>
-            ☢️ Radiology Desk
-          </button>
-          <button onClick={() => handleQuickSwitch('physio_desk')} className={`btn btn-xs ${user?.username === 'physio_desk' ? 'btn-primary' : 'btn-outline-primary'}`}>
-            🏋️ Physio Desk
-          </button>
-          <button onClick={() => handleQuickSwitch('escort1')} className={`btn btn-xs ${user?.role === 'Escort' ? 'btn-primary' : 'btn-outline-primary'}`}>
-            📱 Escort View
-          </button>
-        </div>
+
 
       </div>
     </nav>
@@ -133,6 +116,7 @@ function App() {
     <AuthProvider>
       <SocketProvider>
         <Router>
+          <Toaster position="top-right" />
           <NavigationBar />
           <AppRoutes />
         </Router>

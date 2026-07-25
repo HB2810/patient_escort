@@ -1,65 +1,35 @@
 const fs = require('fs');
 const path = require('path');
 const git = require('isomorphic-git');
+const http = require('isomorphic-git/http/node');
 
 const dir = path.resolve(__dirname);
+const githubToken = process.argv[2] || process.env.GITHUB_TOKEN;
 
-async function main() {
-  console.log('📦 Initializing Git repository with isomorphic-git...');
-  await git.init({ fs, dir });
-
-  console.log('📄 Staging all project files...');
-  const files = await fs.promises.readdir(dir);
-  for (const file of files) {
-    if (file === 'node_modules' || file === '.git') continue;
-    try {
-      const stat = await fs.promises.stat(path.join(dir, file));
-      if (stat.isDirectory()) {
-        const subFiles = await getRecursiveFiles(path.join(dir, file), file);
-        for (const sf of subFiles) {
-          if (!sf.includes('node_modules') && !sf.includes('.DS_Store') && !sf.includes('/dist/')) {
-            await git.add({ fs, dir, filepath: sf });
-          }
-        }
-      } else if (file !== '.DS_Store') {
-        await git.add({ fs, dir, filepath: file });
-      }
-    } catch (e) {
-      console.error(e);
-    }
+async function pushToGithub() {
+  if (!githubToken) {
+    console.log('\n-------------------------------------------------------------------');
+    console.log('📌 LOCAL GIT REPOSITORY IS READY & COMMITTED!');
+    console.log('-------------------------------------------------------------------');
+    console.log('To push directly to https://github.com/HB2810/patient_escort.git, run:');
+    console.log('node push_to_github.js YOUR_GITHUB_PERSONAL_ACCESS_TOKEN');
+    console.log('-------------------------------------------------------------------\n');
+    return;
   }
 
-  console.log('💾 Creating initial git commit...');
-  const sha = await git.commit({
+  console.log('🚀 Pushing to https://github.com/HB2810/patient_escort.git ...');
+  
+  await git.push({
     fs,
+    http,
     dir,
-    author: {
-      name: 'Stavya Spine Hospital',
-      email: 'admin@stavyaspine.com'
-    },
-    message: 'Complete Stavya Spine Hospital Patient Escort System'
+    remote: 'origin',
+    ref: 'main',
+    url: 'https://github.com/HB2810/patient_escort.git',
+    onAuth: () => ({ username: githubToken }),
   });
 
-  console.log(`✅ Git commit created successfully! Commit SHA: ${sha}`);
+  console.log('🎉 SUCCESS! Project pushed live to GitHub repo!');
 }
 
-async function getRecursiveFiles(dirPath, relativeBase) {
-  let results = [];
-  const list = await fs.promises.readdir(dirPath);
-  for (const file of list) {
-    const filePath = path.join(dirPath, file);
-    const relPath = path.join(relativeBase, file);
-    const stat = await fs.promises.stat(filePath);
-    if (stat.isDirectory()) {
-      if (file !== 'node_modules' && file !== 'dist' && file !== '.git') {
-        const res = await getRecursiveFiles(filePath, relPath);
-        results = results.concat(res);
-      }
-    } else {
-      results.push(relPath);
-    }
-  }
-  return results;
-}
-
-main().catch(err => console.error('Git Error:', err));
+pushToGithub().catch(err => console.error('Push Error:', err));

@@ -5,7 +5,7 @@ import axios from 'axios';
 
 const OPDBoard = () => {
   const { user, logout } = useAuth();
-  const { socket, lastNotification } = useSocket();
+  const { socket } = useSocket();
 
   const [cabins, setCabins] = useState([]);
   const [activeTrips, setActiveTrips] = useState([]);
@@ -18,6 +18,7 @@ const OPDBoard = () => {
   const [destRoom, setDestRoom] = useState('MRI Room 1');
   const [mode, setMode] = useState('WHEELCHAIR');
   const [priority, setPriority] = useState('NORMAL');
+  const [notes, setNotes] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
   const fetchData = async () => {
@@ -61,12 +62,14 @@ const OPDBoard = () => {
         dest_dept: destDept,
         dest_room: destRoom,
         mode: mode,
-        priority: selectedCabin >= 14 ? 'HIGH_PRIVILEGED' : priority
+        priority: selectedCabin >= 14 ? 'HIGH_PRIVILEGED' : priority,
+        notes: notes
       });
       
       setSelectedCabin(null);
       setPatientName('');
       setUhid('');
+      setNotes('');
       fetchData();
       alert(`OPD Escort Dispatched for Cabin ${selectedCabin}!`);
     } catch (err) {
@@ -83,11 +86,7 @@ const OPDBoard = () => {
     <div style={{ background: '#F4F7FB', minHeight: 'calc(100vh - 60px)', padding: '2rem 0' }}>
       <div className="container">
         
-        {lastNotification && (
-          <div className="alert alert-info shadow-sm mb-4">
-            ⚡ <strong>Live Notification:</strong> {lastNotification}
-          </div>
-        )}
+
 
         {/* Top Header */}
         <div className="d-flex justify-content-between align-items-center mb-4">
@@ -232,6 +231,17 @@ const OPDBoard = () => {
                         <option value="HIGH_PRIVILEGED">👑 Privileged STAT</option>
                       </select>
                     </div>
+                  </div>
+
+                  <div className="mb-4">
+                    <label className="form-label small fw-bold text-secondary">Notes (Optional)</label>
+                    <textarea 
+                      className="form-control" 
+                      rows="2"
+                      placeholder="Special instructions for escort..." 
+                      value={notes} 
+                      onChange={e => setNotes(e.target.value)} 
+                    />
                   </div>
 
                   <button type="submit" disabled={submitting} className="btn btn-primary w-100 py-3 fw-bold shadow-sm" style={{ backgroundColor: '#1B6CA8' }}>

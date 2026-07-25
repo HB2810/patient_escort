@@ -5,10 +5,9 @@ import axios from 'axios';
 
 const EscortMobile = () => {
   const { user, logout } = useAuth();
-  const { socket, lastNotification } = useSocket();
+  const { socket } = useSocket();
 
   const [myTrip, setMyTrip] = useState(null);
-  const [dutyStatus, setDutyStatus] = useState('AVAILABLE');
 
   const fetchMyTask = async () => {
     try {
@@ -52,11 +51,7 @@ const EscortMobile = () => {
     <div style={{ background: '#F4F7FB', minHeight: 'calc(100vh - 60px)', color: '#212529', padding: '1.5rem 1rem' }}>
       <div className="container" style={{ maxWidth: '500px' }}>
         
-        {lastNotification && (
-          <div className="alert alert-info shadow-sm py-2 mb-3 text-dark small">
-            ⚡ {lastNotification}
-          </div>
-        )}
+
 
         {/* Escort Team Header */}
         <div className="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom">
@@ -67,21 +62,7 @@ const EscortMobile = () => {
           <button onClick={logout} className="btn btn-outline-danger btn-sm">Logout</button>
         </div>
 
-        {/* Duty Status Selector */}
-        <div className="card bg-white border-0 shadow-sm p-3 mb-4 text-center" style={{ borderRadius: '12px' }}>
-          <small className="text-muted mb-2 d-block fw-bold text-uppercase" style={{ fontSize: '0.75rem' }}>Duty Status</small>
-          <div className="btn-group w-100">
-            {['AVAILABLE', 'ON_BREAK', 'OFF_DUTY'].map(st => (
-              <button
-                key={st}
-                onClick={() => setDutyStatus(st)}
-                className={`btn btn-sm ${dutyStatus === st ? 'btn-success fw-bold' : 'btn-light border'}`}
-              >
-                {st.replace('_', ' ')}
-              </button>
-            ))}
-          </div>
-        </div>
+
 
         {/* Active Task Card */}
         {myTrip ? (

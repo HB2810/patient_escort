@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
 import { soundAlert } from '../services/soundAlert';
+import toast from 'react-hot-toast';
 
 const SocketContext = createContext();
 
@@ -8,7 +9,6 @@ export const useSocket = () => useContext(SocketContext);
 
 export const SocketProvider = ({ children }) => {
   const [socket, setSocket] = useState(null);
-  const [lastNotification, setLastNotification] = useState(null);
   const [soundEnabled, setSoundEnabled] = useState(true);
 
   const toggleSound = () => {
@@ -30,16 +30,16 @@ export const SocketProvider = ({ children }) => {
 
     newSocket.on('trip:created', (trip) => {
       soundAlert.playSound('new_request');
-      setLastNotification(`🔔 NEW DISPATCH: ${trip.patient_name} (${trip.origin_dept} ➔ ${trip.dest_dept})`);
+      toast.success(`NEW DISPATCH: ${trip.patient_name} (${trip.origin_dept} ➔ ${trip.dest_dept})`, { duration: 6000, icon: '🔔' });
     });
 
     newSocket.on('trip:updated', (trip) => {
       if (trip.status === 'HANDOVER_PENDING') {
         soundAlert.playSound('handover');
-        setLastNotification(`🤝 HANDOVER PENDING: ${trip.patient_name} arrived at ${trip.dest_dept}!`);
+        toast(`HANDOVER PENDING: ${trip.patient_name} arrived at ${trip.dest_dept}!`, { duration: 6000, icon: '🤝' });
       } else {
         soundAlert.playSound('new_request');
-        setLastNotification(`STATUS UPDATE: Trip #${trip.id} is now ${trip.status.replace('_', ' ')}`);
+        toast(`STATUS UPDATE: Trip #${trip.id} is now ${trip.status.replace('_', ' ')}`, { duration: 4000 });
       }
     });
 
@@ -49,7 +49,7 @@ export const SocketProvider = ({ children }) => {
   }, []);
 
   return (
-    <SocketContext.Provider value={{ socket, lastNotification, soundEnabled, toggleSound }}>
+    <SocketContext.Provider value={{ socket, soundEnabled, toggleSound }}>
       {children}
     </SocketContext.Provider>
   );
