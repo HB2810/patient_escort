@@ -1,5 +1,16 @@
 {
+  "name": "patient-escort-module",
+  "version": "1.0.0",
+  "scripts": {
+    "install:all": "npm install && cd client && npm install && cd ../server && npm install",
+    "dev:server": "cd server && npm run dev",
+    "dev:client": "cd client && npm run dev",
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\""
+  },
   "dependencies": {
     "isomorphic-git": "^1.40.0"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
   }
 }
